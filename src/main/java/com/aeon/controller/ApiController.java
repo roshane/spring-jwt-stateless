@@ -19,6 +19,7 @@ public class ApiController {
 
     @RequestMapping("/current-user")
     public ResponseEntity<UserDetails> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        logger.debug("current user details [{}]", userDetails);
         return ResponseEntity.ok(userDetails);
     }
 }
