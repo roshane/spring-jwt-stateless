@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by roshane on 2/26/17.
  */
-@Service
+@Service("userDetailsService")
 public class InMemoryUserDetailsService implements UserDetailsService {
 
     private static final Map<String, UserDetails> users;
@@ -30,10 +30,12 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println(String.format("looking up for user %s",username));
         if (users.containsKey(username)) {
-            UserDetails userDetails = users.get(username);
-            System.out.println("found the user "+userDetails);
-            return userDetails;
+            return copyUser(users.get(username));
         }
         throw new UsernameNotFoundException(String.format("user not found %s", username));
+    }
+
+    public static UserDetails copyUser(UserDetails user){
+        return new User(user.getUsername(), user.getPassword(), user.getAuthorities());
     }
 }

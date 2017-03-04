@@ -22,4 +22,9 @@ public class ApiController {
         logger.debug("current user details [{}]", userDetails);
         return ResponseEntity.ok(userDetails);
     }
+
+    @RequestMapping("/ping")
+    public ResponseEntity<?> ping() {
+        return ResponseEntity.ok("pong");
+    }
 }
