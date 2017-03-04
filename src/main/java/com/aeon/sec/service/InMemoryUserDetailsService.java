@@ -22,8 +22,13 @@ public class InMemoryUserDetailsService implements UserDetailsService {
 
     static {
         users = new HashMap<>();
-        users.put("user", new User("user", "password", Collections.singletonList(new SimpleGrantedAuthority("USER"))));
-        users.put("admin", new User("admin", "password", Arrays.asList(new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER"))));
+
+        users.put("user", new User("user", "password", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ACTUATOR"))));
+
+        users.put("admin", new User("admin", "password", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"),
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ACTUATOR"))));
     }
 
     @Override

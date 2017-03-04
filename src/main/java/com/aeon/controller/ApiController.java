@@ -2,7 +2,10 @@ package com.aeon.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,13 @@ public class ApiController {
 
     @RequestMapping("/ping")
     public ResponseEntity<?> ping() {
+        logger.debug("ping response {[]}", "pong");
         return ResponseEntity.ok("pong");
+    }
+
+    @RequestMapping("/admin/current-user")
+    public ResponseEntity<UserDetails> adminUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
+        logger.debug("admin current-user ");
+        return ResponseEntity.ok(userDetails);
     }
 }

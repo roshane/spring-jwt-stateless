@@ -3,6 +3,8 @@ package com.aeon.sec.filter;
 import com.aeon.sec.ex.JwtMissingException;
 import com.aeon.sec.jwt.JwtAuthenticationToken;
 import com.aeon.sec.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,11 +31,13 @@ public class StatelessJwtFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
+    private static final Logger logger = LoggerFactory.getLogger(StatelessJwtFilter.class);
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println(">>>> StatelessJwtFilter checking jwt header");
-
+        logger.debug(">>>> StatelessJwtFilter checking jwt header");
         String jwt = obtainJwt(request);
         if (jwt == null) {
             filterChain.doFilter(request, response);
@@ -44,6 +48,7 @@ public class StatelessJwtFilter extends OncePerRequestFilter {
         UserDetails userDetails = jwtUtil.parseToken(jwt);
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(userDetails, null   , userDetails.getAuthorities(), jwt);
         authenticationToken.setDetails(new WebAuthenticationDetails(request));
+        logger.debug("stateless filter granted authorities {}", userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
 
@@ -52,6 +57,8 @@ public class StatelessJwtFilter extends OncePerRequestFilter {
     private static String obtainJwt(HttpServletRequest request) {
         if (StringUtils.hasText(request.getHeader(AUTHORIZATION))) {
             String jwtHeader = request.getHeader(AUTHORIZATION);
+            System.out.println(">>> StatelessJwtFilter found jwt header");
+            logger.debug(">>> StatelessJwtFilter found jwt header");
             return jwtHeader.substring(BEARER.length(), jwtHeader.length());
         }
         return null;

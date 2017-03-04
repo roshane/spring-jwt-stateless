@@ -1,0 +1,44 @@
+<configuration>
+
+    <property name="LOG_DIR" value="/aux/logs/test"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) --- [%t] %highlight(%-40.40c{1.}) : %highlight(%m%n)</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/hotline-api-%d{yyyy-MM-DD}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p --- [%t] %-40.40c{1.} : %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="frameworkLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/framework-log.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/hotline-api-framework-%d{yyyy-MM-DD}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p --- [%t] %-40.40c{1.} : %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org" level="info">
+        <appender-ref ref="frameworkLog"/>
+    </logger>
+
+    <logger name="com.aeon" level="debug">
+        <appender-ref ref="file"/>
+    </logger>
+
+    <root level="debug">
+        <!--<appender-ref ref="file"/>-->
+        <appender-ref ref="console"/>
+    </root>
+</configuration>
+

@@ -30,7 +30,7 @@ import java.util.Map;
  * Created by roshane on 2/25/17.
  */
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/admin/*").hasRole("ADMIN")
                 .antMatchers("/auth**").permitAll()
                 .anyRequest().authenticated();
 

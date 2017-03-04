@@ -31,12 +31,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
         UserDetails userDetails = userDetailsService.loadUserByUsername((String) jwtAuthenticationToken.getPrincipal());
-
+        System.out.println(">>> JwtAuthenticationProvider authenticating");
         if (userDetails == null || !jwtAuthenticationToken.getCredentials().equals(userDetails.getPassword())) {
             throw new BadCredentialsException("invalid credentials");
         }
         try {
-            return new JwtAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities(), jwtUtil.createToken(userDetails));
+            return new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities(), jwtUtil.createToken(userDetails));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new JwtCreationException("error creating jwt token");
