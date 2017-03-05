@@ -42,8 +42,10 @@ public class EmailService {
 
     public void sendMailMessage(String message) {
         try {
-            MimeMessagePreparator preparator = processMimeMessage();
-            ((JavaMailSender) mailSender).send(preparator);
+//            MimeMessagePreparator preparator = processMimeMessage();
+            simpleMailMessage.setText(message);
+            mailSender.send(simpleMailMessage);
+//            ((JavaMailSender) mailSender).send(preparator);
         } catch (MailException ex) {
             ex.printStackTrace();
             logger.error("error sending mail {}", ex);

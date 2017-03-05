@@ -6,6 +6,8 @@ import com.aeon.sec.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -33,6 +35,8 @@ public class StatelessJwtFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(StatelessJwtFilter.class);
 
+    @Autowired
+    private CacheManager cacheManager;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -49,6 +53,9 @@ public class StatelessJwtFilter extends OncePerRequestFilter {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(userDetails, null   , userDetails.getAuthorities(), jwt);
         authenticationToken.setDetails(new WebAuthenticationDetails(request));
         logger.debug("stateless filter granted authorities {}", userDetails.getAuthorities());
+
+        Cache cache = cacheManager.getCache("api-cache");
+        logger.debug("cache [{}]", ((com.google.common.cache.Cache) cache.getNativeCache()).asMap());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
 

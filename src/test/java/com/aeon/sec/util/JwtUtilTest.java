@@ -1,12 +1,16 @@
 package com.aeon.sec.util;
 
 import com.aeon.AbstractBaseTest;
+import com.aeon.controller.ApiController;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
@@ -37,4 +41,12 @@ public class JwtUtilTest extends AbstractBaseTest{
 
     }
 
+    @Test
+    public void spelTest() throws Exception {
+        // TODO: 3/5/17 in-complete
+        ExpressionParser parser=new SpelExpressionParser();
+//        parser.parseExpression("ApiController.class.getDeclaredMethod("")");
+        Method adminUserDetails = ApiController.class.getDeclaredMethod("adminUserDetails", UserDetails.class);
+        assertNotNull(adminUserDetails);
+    }
 }
